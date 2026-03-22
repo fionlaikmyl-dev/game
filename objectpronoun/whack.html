@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>打地鼠學英文 - 主格 vs 賓格代名詞</title>
+  <style>
+    body { 
+      font-family: Arial, sans-serif; 
+      text-align: center; 
+      background: #f0f8ff; 
+      margin: 0;
+      padding: 20px;
+    }
+    h1 { color: #2c3e50; }
+    .info { font-size: 1.4em; margin: 10px; }
+    .score { color: #27ae60; font-weight: bold; }
+    .time { color: #e74c3c; font-weight: bold; }
+    .game-container { 
+      display: grid; 
+      grid-template-columns: repeat(3, 160px); 
+      gap: 25px; 
+      margin: 30px auto; 
+      width: fit-content; 
+    }
+    .hole { 
+      height: 160px; 
+      background: #8B4513; 
+      border-radius: 50%; 
+      position: relative; 
+      cursor: pointer; 
+      box-shadow: inset 0 10px 20px rgba(0,0,0,0.6);
+      overflow: hidden;
+    }
+    .mole {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+      user-select: none;
+    }
+    .mole img {
+      width: 80px;
+      height: 80px;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .mole-word {
+      font-size: 32px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 2px 2px #000;
+      margin-top: 0;
+    }
+    .feedback {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    .feedback img {
+      width: 110px;
+      height: 110px;
+      display: block;
+    }
+    .hint { font-size: 1.1em; color: #555; margin: 15px; }
+  </style>
+</head>
+<body>
+  <h1>打地鼠學英文：主格 vs 賓格！</h1>
+  <p class="hint">規則：只打 <strong>賓格代名詞</strong>（me, you, him, her, it, us, them）→ +10分<br>
+  打到 <strong>主格代名詞</strong>（I, you, he, she, it, we, they）→ -5分<br>
+  打空洞也扣分！</p>
+  <div class="info">
+    分數: <span id="score" class="score">0</span>　　時間: <span id="timer" class="time">60</span>s
+  </div>
+  <button onclick="startGame()" style="padding:12px 30px; font-size:1.2em; margin:10px;">開始遊戲</button>
+  <div class="game-container" id="holes"></div>
+
+  <script>
+    const objectPronouns = ["me", "you", "him", "her", "it", "us", "them"];          // 正確（賓格）
+    const subjectPronouns = ["I", "he", "she", "we", "they"];         // 錯誤（主格）
+
+    let score = 0;
+    let time = 60;
+    let timerId, moleTimer;
+    const holesDiv = document.getElementById('holes');
+    const scoreEl = document.getElementById('score');
+    const timerEl = document.getElementById('timer');
+
+    // 建立 9 個洞
+    for(let i = 0; i < 9; i++) {
+      const hole = document.createElement('div');
+      hole.className = 'hole';
+      hole.innerHTML = `
+        <div class="mole"></div>
+        <div class="feedback"></div>
+      `;
+      holesDiv.appendChild(hole);
+      hole.addEventListener('click', () => handleClick(hole));
+    }
+
+    const holes = document.querySelectorAll('.hole');
+
+    function getRandomPronoun(isCorrect) {
+      const list = isCorrect ? objectPronouns : subjectPronouns;
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function randomMole() {
+      // 清空所有
+      holes.forEach(h => {
+        h.querySelector('.mole').innerHTML = '';
+        h.querySelector('.feedback').style.opacity = '0';
+        h.querySelector('.feedback').innerHTML = '';
+        delete h.dataset.word;
+        delete h.dataset.correct;
+      });
+
+      // 隨機出現 2~4 個代名詞（有些正確、有些錯誤）
+      const count = Math.floor(Math.random() * 3) + 1; // 2~4 個
+      const usedIndices = new Set();
+
+      for(let i = 0; i < count; i++) {
+        let idx;
+        do {
+          idx = Math.floor(Math.random() * 9);
+        } while (usedIndices.has(idx));
+        usedIndices.add(idx);
+
+        const hole = holes[idx];
+        const isCorrect = Math.random() > 0.4; // 約 60% 機率是正確的（可調整難度）
+        const word = getRandomPronoun(isCorrect);
+
+        // 顯示地鼠圖片和單字
+        hole.querySelector('.mole').innerHTML = `<img src="img/mole.png" alt="mole"><span class="mole-word">${word}</span>`;
+        hole.dataset.word = word;
+        hole.dataset.correct = isCorrect ? "true" : "false";
+      }
+    }
+
+    function handleClick(hole) {
+      const mole = hole.querySelector('.mole');
+      const feedback = hole.querySelector('.feedback');
+      const isCorrect = hole.dataset.correct === "true";
+      const hasMole = mole.innerHTML !== '';
+
+      if (hasMole) {
+        if (isCorrect) {
+          // 正確（賓格）→ 加分
+          score += 10;
+          feedback.innerHTML = '<img src="img/mole_hit.png" alt="mole hit">';
+        } else {
+          // 錯誤（主格）→ 扣分
+          score = Math.max(0, score - 5);
+          feedback.innerHTML = '<img src="img/mole_miss.png" alt="mole miss">';
+        }
+      } else {
+        // 打空洞 → 扣分
+        score = Math.max(0, score - 5);
+        feedback.innerHTML = '<img src="img/mole_miss.png" alt="mole miss">';
+      }
+
+      feedback.style.opacity = '1';
+      setTimeout(() => { feedback.style.opacity = '0'; }, 500);
+
+      // 清掉字和圖片
+      mole.innerHTML = '';
+      delete hole.dataset.word;
+      delete hole.dataset.correct;
+
+      scoreEl.textContent = score;
+    }
+
+    function startGame() {
+      score = 0;
+      time = 60;
+      scoreEl.textContent = 0;
+      timerEl.textContent = 60;
+
+      clearInterval(timerId);
+      clearInterval(moleTimer);
+
+      timerId = setInterval(() => {
+        time--;
+        timerEl.textContent = time;
+        if (time <= 0) {
+          clearInterval(timerId);
+          clearInterval(moleTimer);
+          alert('時間到！遊戲結束\n最終分數：' + score + '\n記得多練習主格/賓格的差別哦！');
+        }
+      }, 1000);
+
+        moleTimer = setInterval(randomMole, 2200); // 每2.2秒刷新一次，讓地鼠停留更久
+        randomMole(); // 立即出現第一波
+    }
+  </script>
+</body>
+</html>
