@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2D Walking Game - Learn Directions</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>2D Walking Game</h1>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <div id="controls">
+      <button onclick="turnLeft()">Turn Left</button>
+      <button onclick="walkStraightAhead()">Walk Straight Ahead</button>
+      <button onclick="turnRight()">Turn Right</button>
+      <button onclick="walkAcross()">Walk Across (Zebra Crossing only)</button>
+      <button onclick="checkDirection('left')">On Your Left</button>
+      <button onclick="checkDirection('right')">On Your Right</button>
+      <button onclick="checkDirection('opposite')">Opposite</button>
+      <button onclick="checkDirection('next')">Next To</button>
+      <button onclick="checkCorner()">At Corner</button>
+      <button onclick="checkEndOfRoad()">At End of Road</button>
+    </div>
+    <div id="prompt"></div>
+  </div>
+  <script src="game.js"></script>
+</body>
+</html>
