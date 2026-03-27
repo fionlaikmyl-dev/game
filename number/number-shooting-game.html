@@ -952,10 +952,8 @@
         // ========== SETTINGS ==========
         function setDifficulty(level) {
             difficulty = level;
-            if (!gameActive) {
-                generateBalloons();
-            } else {
-                generateBalloons(); // Regenerate with new difficulty even if game is active
+            if (gameActive) {
+                generateBalloons(); // Only regenerate if game is already active
             }
         }
 
@@ -969,7 +967,9 @@
             } else {
                 maxQuestions = 20;
             }
-            generateBalloons(); // Always regenerate when mode changes
+            if (gameActive) {
+                generateBalloons(); // Only regenerate if game is already active
+            }
         }
 
         function setTheme(theme) {
