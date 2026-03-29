@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordwall Maze Chase</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Wordwall Maze Chase</h1>
+        </div>
+
+        <div class="instructions">
+            <p><strong>📖 How to Play:</strong></p>
+            <p id="controlsText">• Use arrow keys or WASD to move the character through the maze</p>
+            <p>• Collect letters to spell the target word</p>
+            <p>• Complete the word to win!</p>
+        </div>
+
+        <div class="controls">
+            <div class="input-group">
+                <label for="targetWordInput">Target Word:</label>
+                <input type="text" id="targetWordInput" placeholder="Enter word..." value="HELLO">
+            </div>
+            <button onclick="setTargetWord()">Set Word</button>
+            <button onclick="startGame()" id="startBtn" class="start-btn">Start Game</button>
+            <button onclick="resetGame()">Reset Game</button>
+        </div>
+
+        <div class="game-info">
+            <div class="info-box">
+                <label>Target Word</label>
+                <div class="value target-word" id="targetDisplay">HELLO</div>
+            </div>
+            <div class="info-box">
+                <label>Letters Collected</label>
+                <div class="value collected" id="collectedDisplay"></div>
+            </div>
+            <div class="info-box">
+                <label>Score</label>
+                <div class="value" id="scoreDisplay">0</div>
+            </div>
+            <div class="info-box">
+                <label>Lives</label>
+                <div class="value" id="livesDisplay">❤️❤️❤️❤️❤️</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <!-- Touch Controls for Mobile Devices -->
+        <div id="touchControls" class="touch-controls" style="display: none;">
+            <button class="touch-btn" id="upBtn" data-key-up="true">↑</button>
+            <div class="touch-buttons-row">
+                <button class="touch-btn" id="leftBtn" data-key-left="true">←</button>
+                <button class="touch-btn" id="downBtn" data-key-down="true">↓</button>
+                <button class="touch-btn" id="rightBtn" data-key-right="true">→</button>
+            </div>
+        </div>
+
+        <div class="status" id="status"></div>
+        <div class="feedback" id="feedback"></div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>

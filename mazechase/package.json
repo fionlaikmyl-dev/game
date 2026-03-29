@@ -1,0 +1,28 @@
+{
+  "name": "maze-chase",
+  "version": "1.0.0",
+  "description": "An interactive maze game where players collect letters to spell target words",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000 || npx http-server",
+    "dev": "npx http-server -c-1",
+    "build": "echo 'No build step required for this project'"
+  },
+  "keywords": [
+    "game",
+    "maze",
+    "educational",
+    "interactive",
+    "canvas",
+    "wordwall"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/maze-chase.git"
+  }
+}
